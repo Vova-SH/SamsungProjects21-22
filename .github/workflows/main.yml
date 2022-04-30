@@ -24,11 +24,11 @@ jobs:
           JSON="${JSON//$'\n'/'%0A'}"
           JSON="${JSON//$'\r'/'%0D'}"
           echo "::set-output name=list_repos::${JSON}"
-          
+
       - name: Show data
-        run: echo "${{ needs.get_repos.outputs.list_repos }}"
+        run: echo "${{ steps.setup_repos.outputs.list_repos }}"
       - name: Show parse data
-        run: echo "${{ fromJson(needs.get_repos.outputs.list_repos) }}"
+        run: echo "${{ fromJson(steps.setup_repos.outputs.list_repos) }}"
 
 
 
