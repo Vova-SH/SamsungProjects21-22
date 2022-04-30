@@ -25,7 +25,9 @@ jobs:
           JSON="${JSON//$'\r'/'%0D'}"
           echo "::set-output name=list_repos::$JSON"
       - name: Show data
-        run: echo "${{ fromJson(needs.get_repos.outputs.list_repos) }} "
+        run: |
+          echo "${{ needs.get_repos.outputs.list_repos }}"
+          echo "${{ fromJson(needs.get_repos.outputs.list_repos) }}"
 
 
 
