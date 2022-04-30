@@ -38,6 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Load latest release from ${{ matrix.data.repo }}
+        continue-on-error: true
         uses: robinraju/release-downloader@v1.3
         with:
           repository: ${{ matrix.data.repo }}
