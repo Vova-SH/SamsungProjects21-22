@@ -90,6 +90,8 @@ jobs:
   zip_repos:
     needs: downloaded_repos
     runs-on: ubuntu-latest
+    permissions:
+      contents: write 
     steps:
       - name: Checkout last changes
         uses: actions/checkout@v3
