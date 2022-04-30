@@ -9,7 +9,8 @@ jobs:
       matrix:
         data: [
           {repo: "Vova-SH/MakeUpYourMind", folder: "Vova"},
-          {repo: "Vova-SH/MakeUpYourMind", folder: "Vova2"}
+          {repo: "GalinaDa/ListOfProduct", folder: "Галина Давыденко"}
+
         ]
     runs-on: ubuntu-latest
     steps:
@@ -28,7 +29,11 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.data.folder }}
-          path: repos/${{ matrix.data.folder }}/*.zip
+          path: |
+            repos/${{ matrix.data.folder }}/*.ppt
+            repos/${{ matrix.data.folder }}/*.pptx
+            repos/${{ matrix.data.folder }}/*.pdf
+            repos/${{ matrix.data.folder }}/*.apk
 
   zip_repos:
     needs: downloaded_repos
