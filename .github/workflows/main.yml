@@ -20,7 +20,7 @@ jobs:
         id: setup_repos
         run: |
           JSON=$(cat ./${{ github.event.inputs.destination_folder }}/repos.json)
-          echo "::set-output name=list_repos::${JSON//'%'/'%25'}"
+          echo "::set-output name=list_repos::${JSON}"
 
 
 
@@ -28,7 +28,7 @@ jobs:
     needs: get_repos
     strategy:
       matrix:
-        data: ${{ fromJson(needs.get_repos.outputs.list_repos) }}
+        data: ${{fromJson(needs.get_repos.outputs.list_repos)}}
     runs-on: ubuntu-latest
     steps:
       - name: Copied last release from ${{ matrix.data.repo }}
