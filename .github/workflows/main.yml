@@ -31,6 +31,7 @@ jobs:
           path: repos/${{ matrix.data.folder }}/*.zip
 
   zip_repos:
+    needs: downloaded_repos
     runs-on: ubuntu-latest
     steps:
       - name: Download all workflow run artifacts
