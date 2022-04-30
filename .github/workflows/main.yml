@@ -37,5 +37,11 @@ jobs:
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v3
 
-      - name: Display structure of downloaded files
+      - name: Structure of downloaded files
         run: ls -R
+
+      - name: Upload all projects
+        uses: actions/upload-artifact@v3
+        with:
+          name: All-Projects
+          path: ./**
