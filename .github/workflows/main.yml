@@ -1,45 +1,43 @@
-name: Download Release For Repos
+name: Grab graduation works
 
 on:
   workflow_dispatch:
     inputs:
       destination_folder:
-        description: 'Sync folder'
+        description: 'Choose folder'
         required: true
 
 jobs:
-  get_repos:
+  get-list-works:
     runs-on: ubuntu-latest
     outputs:
-      list_repos: ${{ steps.setup_repos.outputs.list_repos }}
+      works: ${{ steps.setup_repos.outputs.works }}
     steps:
       - name: Checkout last changes
         uses: actions/checkout@v3
 
-      - name: Get repositories from ${{ github.event.inputs.destination_folder }}/repos.json
+      - name: Read base information from ${{ github.event.inputs.destination_folder }}/repos.json
         id: setup_repos
         run: |
           JSON=$(cat ./${{ github.event.inputs.destination_folder }}/repos.json)
           JSON="${JSON//'%'/'%25'}"
           JSON="${JSON//$'\n'/'%0A'}"
           JSON="${JSON//$'\r'/'%0D'}"
-          echo "::set-output name=list_repos::${JSON}"
+          echo "::set-output name=works::${JSON}"
 
-      - name: Show data
-        run: echo "${{ steps.setup_repos.outputs.list_repos }}"
-      - name: Show parse data
-        run: echo "${{ fromJson(steps.setup_repos.outputs.list_repos) }}"
+      - name: Checking data
+        run: echo "${{ steps.setup_repos.outputs.works }}"
 
 
 
-  downloaded_repos:
-    needs: get_repos
+  load-latest-release:
+    needs: get-list-works
     strategy:
       matrix:
-        data: ${{ fromJson(needs.get_repos.outputs.list_repos) }}
+        data: ${{ fromJson(needs.get-list-works.outputs.works) }}
     runs-on: ubuntu-latest
     steps:
-      - name: Copied last release from ${{ matrix.data.repo }}
+      - name: Load latest release from ${{ matrix.data.repo }}
         uses: robinraju/release-downloader@v1.3
         with:
           repository: ${{ matrix.data.repo }}
@@ -73,7 +71,7 @@ jobs:
         with:
           files: "repos/${{ matrix.data.folder }}/*.pdf"
         
-      - name: Save to artifacts
+      - name: Save to artifacts (if all files exists)
         if: ${{ steps.check_apk.outputs.files_exists == 'true' && ( steps.check_ppt.outputs.files_exists == 'true' || steps.check_pptx.outputs.files_exists == 'true' || steps.check_pdf.outputs.files_exists == 'true' ) }}
         uses: actions/upload-artifact@v3
         with:
@@ -87,8 +85,8 @@ jobs:
 
 
 
-  zip_repos:
-    needs: downloaded_repos
+  publish:
+    needs: load-latest-release
     runs-on: ubuntu-latest
     permissions:
       contents: write 
@@ -96,27 +94,26 @@ jobs:
       - name: Checkout last changes
         uses: actions/checkout@v3
 
-      - name: Remove old projects
+      - name: Remove old releases (if exist)
         run: |
-          if [ -d "${{ github.event.inputs.destination_folder }}/projects" ]; then
-            rmdir ${{ github.event.inputs.destination_folder }}/projects
+          if [ -d "${{ github.event.inputs.destination_folder }}/Projects" ]; then
+            rmdir ${{ github.event.inputs.destination_folder }}/Projects
           fi
 
-      - name: Download all workflow run artifacts
+      - name: Download all correct projects
         uses: actions/download-artifact@v3
         with:
-          path: ${{ github.event.inputs.destination_folder }}/projects
+          path: ${{ github.event.inputs.destination_folder }}/Projects
 
-      - name: Structure of downloaded files
-        run: ls -R
-
-      - name: Load new data projects
+      - name: Push new projects
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
+          commit_user_name: git-bot
+          commit_user_email: git-bot@noreply.github.com
           commit_message: Update projects info on ${{ github.event.inputs.destination_folder }}
 
-      - name: Upload all projects
+      - name: Upload projects to artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: All-Projects
+          name: Projects-${{ github.event.inputs.destination_folder }}
           path: ${{ github.event.inputs.destination_folder }}/projects/**
