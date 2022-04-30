@@ -91,14 +91,27 @@ jobs:
     needs: downloaded_repos
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout last changes
+        uses: actions/checkout@v3
+
+      - name: Checkout last changes
+        run: rmdir ${{ github.event.inputs.destination_folder }}/projects
+
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v3
+        with:
+          path: ${{ github.event.inputs.destination_folder }}/projects
 
       - name: Structure of downloaded files
         run: ls -R
+
+      - name: Load new data projects
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Update projects info on ${{ github.event.inputs.destination_folder }}
 
       - name: Upload all projects
         uses: actions/upload-artifact@v3
         with:
           name: All-Projects
-          path: ./**
+          path: ${{ github.event.inputs.destination_folder }}/projects/**
