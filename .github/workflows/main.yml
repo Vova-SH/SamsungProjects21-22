@@ -16,11 +16,16 @@ jobs:
       - name: Checkout last changes
         uses: actions/checkout@v3
 
-      - name: Get repositories from JSON file
+      - name: Get repositories from ${{ github.event.inputs.destination_folder }}/repos.json
         id: setup_repos
         run: |
-          JSON=$(cat ./${{ github.event.inputs.destination_folder }}/repos.json)
-          echo "::set-output name=list_repos::${JSON}"
+          JSON='cat ./${{ github.event.inputs.destination_folder }}/repos.json)'          
+          JSON="${JSON//'%'/'%25'}"
+          JSON="${JSON//$'\n'/'%0A'}"
+          JSON="${JSON//$'\r'/'%0D'}"
+          echo "::set-output name=list_repos::$JSON"
+      - name: Show data
+        run: echo "${{ fromJson(needs.get_repos.outputs.list_repos) }} "
 
 
 
@@ -28,7 +33,7 @@ jobs:
     needs: get_repos
     strategy:
       matrix:
-        data: ${{fromJson(needs.get_repos.outputs.list_repos)}}
+        data: ${{ fromJson(needs.get_repos.outputs.list_repos) }}
     runs-on: ubuntu-latest
     steps:
       - name: Copied last release from ${{ matrix.data.repo }}
