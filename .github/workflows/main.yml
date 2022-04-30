@@ -1,34 +1,31 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Download Release For Repos
 
-# Controls when the workflow will run
 on:
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  downloaded_repos:
+    strategy:
+      matrix:
+        repositories: ["Vova-SH/MakeUpYourMind"]
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
-      - name: copy release
+      - name: Copied last release from ${{ matrix.repositories }}
         uses: robinraju/release-downloader@v1.3
         with:
-          repository: "Vova-SH/MakeUpYourMind"
+          repository: ${{ matrix.repositories }}
           latest: true
           fileName: "*"
-          out-file-path: "test"
+          out-file-path: "repos/"${{ matrix.repositories }}
           tarBall: false
           zipBall: true
-
-      - name: Save to archive
+  create_artifacts:
+    needs: downloaded_repos
+    runs-on: ubuntu-latest
+    steps:
+      - name: Save to artifacts
         uses: actions/upload-artifact@v3
         with:
           name: artifact
