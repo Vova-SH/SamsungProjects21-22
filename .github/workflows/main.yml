@@ -18,7 +18,7 @@ jobs:
           repository: ${{ matrix.repositories }}
           latest: true
           fileName: "*"
-          out-file-path: "repos/"${{ matrix.repositories }}
+          out-file-path: "repos/${matrix.repositories}"
           tarBall: false
           zipBall: true
   create_artifacts:
