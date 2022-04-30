@@ -3,17 +3,19 @@ name: Download Release For Repos
 on:
   workflow_dispatch:
 
+env:
+  data: [
+    {repo: "Vova-SH/MakeUpYourMind", folder: "Vova"},
+    {repo: "Vova-SH/MakeUpYourMind", folder: "Vova2"}
+  ]
+
 jobs:
   downloaded_repos:
     strategy:
       matrix:
-        data: [
-          {repo: "Vova-SH/MakeUpYourMind", folder: "Vova"}
-        ]
+        data: $data
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
       - name: Copied last release from ${{ matrix.data.repo }}
         id: copied_releases
         uses: robinraju/release-downloader@v1.3
@@ -21,32 +23,12 @@ jobs:
           repository: ${{ matrix.data.repo }}
           latest: true
           fileName: "*"
-          out-file-path: repos/${{ matrix.data.repo }}
+          out-file-path: repos/${{ matrix.data.folder }}
           tarBall: false
           zipBall: true
 
       - name: Save to artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.data.folder }}
-          path: repos/**/*.zip
-
-  create_artifacts:
-    needs: downloaded_repos
-    runs-on: ubuntu-latest
-    steps:
-      - name: Save to artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: output
-          path: repos/**/*.zip
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,        
-          echo test, and deploy your project.
+          name: Output
+          path: repos/${{ matrix.data.folder }}/*.zip
