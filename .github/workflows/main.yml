@@ -27,25 +27,25 @@ jobs:
         id: check_apk
         uses: andstor/file-existence-action@v1
         with:
-          files: "*.apk"
+          files: "repos/${{ matrix.data.folder }}/*.apk"
           
       - name: Check PPT
         id: check_ppt
         uses: andstor/file-existence-action@v1
         with:
-          files: "*.ppt"
+          files: "repos/${{ matrix.data.folder }}/*.ppt"
           
       - name: Check PPTX
         id: check_pptx
         uses: andstor/file-existence-action@v1
         with:
-          files: "*.pptx"
+          files: "repos/${{ matrix.data.folder }}/*.pptx"
           
       - name: Check PDF
         id: check_pdf
         uses: andstor/file-existence-action@v1
         with:
-          files: "*.pdf"
+          files: "repos/${{ matrix.data.folder }}/*.pdf"
         
       - name: Save to artifacts
         if: ${{ steps.check_apk.outputs.files_exists == 'true' && ( steps.check_ppt.outputs.files_exists == 'true' || steps.check_pptx.outputs.files_exists == 'true' || steps.check_pdf.outputs.files_exists == 'true' ) }}
