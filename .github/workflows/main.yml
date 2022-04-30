@@ -27,5 +27,5 @@ jobs:
       - name: Save to artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: Output
+          name: ${{ matrix.data.folder }}
           path: repos/${{ matrix.data.folder }}/*.zip
