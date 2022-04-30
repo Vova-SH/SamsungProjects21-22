@@ -2,15 +2,33 @@ name: Download Release For Repos
 
 on:
   workflow_dispatch:
+    inputs:
+      destination_folder:
+        description: 'Sync folder'
+        required: true
 
 jobs:
+  get_repos:
+    runs-on: ubuntu-latest
+    outputs:
+      list_repos: ${{ steps.setup_repos.outputs.list_repos }}
+    steps:
+      - name: Checkout last changes
+        uses: actions/checkout@v3
+
+      - name: Get repositories from JSON file
+        id: setup_repos
+        run: |
+          JSON=$(cat ./${{ github.event.inputs.destination_folder }}/repos.json)
+          echo "::set-output name=list_repos::${JSON//'%'/'%25'}"
+
+
+
   downloaded_repos:
+    needs: get_repos
     strategy:
       matrix:
-        data: [
-          {repo: "Vova-SH/MakeUpYourMind", folder: "Vova"},
-          {repo: "GalinaDa/ListOfProduct", folder: "Галина Давыденко"}
-        ]
+        data: ${{ fromJson(needs.get_repos.outputs.list_repos) }}
     runs-on: ubuntu-latest
     steps:
       - name: Copied last release from ${{ matrix.data.repo }}
@@ -58,6 +76,9 @@ jobs:
             repos/${{ matrix.data.folder }}/*.pdf
             repos/${{ matrix.data.folder }}/*.apk
             repos/${{ matrix.data.folder }}/*.zip
+
+
+
   zip_repos:
     needs: downloaded_repos
     runs-on: ubuntu-latest
