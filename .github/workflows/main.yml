@@ -13,6 +13,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Copied last release from ${{ matrix.repositories }}
+        id: copied_releases
         uses: robinraju/release-downloader@v1.3
         with:
           repository: ${{ matrix.repositories }}
@@ -21,6 +22,7 @@ jobs:
           out-file-path: "repos/${matrix.repositories}"
           tarBall: false
           zipBall: true
+
   create_artifacts:
     needs: downloaded_repos
     runs-on: ubuntu-latest
@@ -28,8 +30,8 @@ jobs:
       - name: Save to artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: artifact
-          path: test/*.zip
+          name: output
+          path: repos/**/*.zip
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
