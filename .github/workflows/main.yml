@@ -29,3 +29,12 @@ jobs:
         with:
           name: ${{ matrix.data.folder }}
           path: repos/${{ matrix.data.folder }}/*.zip
+
+  zip_repos:
+    runs-on: ubuntu-latest
+    steps:
+	  - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v3
+		
+	- name: Display structure of downloaded files
+      run: ls -R
