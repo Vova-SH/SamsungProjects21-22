@@ -31,10 +31,8 @@ jobs:
       - name: Save to archive
         uses: actions/upload-artifact@v3
         with:
-          name: result
-          path: |
-            test/**/*.zip
-            test/**/*.ppt
+          name: artifact
+          path: test/*.zip
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
