@@ -19,7 +19,7 @@ jobs:
       - name: Get repositories from ${{ github.event.inputs.destination_folder }}/repos.json
         id: setup_repos
         run: |
-          JSON='cat ./${{ github.event.inputs.destination_folder }}/repos.json)'          
+          JSON=$(cat ./${{ github.event.inputs.destination_folder }}/repos.json)
           JSON="${JSON//'%'/'%25'}"
           JSON="${JSON//$'\n'/'%0A'}"
           JSON="${JSON//$'\r'/'%0D'}"
