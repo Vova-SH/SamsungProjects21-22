@@ -94,8 +94,11 @@ jobs:
       - name: Checkout last changes
         uses: actions/checkout@v3
 
-      - name: Checkout last changes
-        run: rmdir ${{ github.event.inputs.destination_folder }}/projects
+      - name: Remove old projects
+        run: |
+          if [ -d "${{ github.event.inputs.destination_folder }}/projects" ]; then
+            rmdir ${{ github.event.inputs.destination_folder }}/projects
+          fi
 
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v3
