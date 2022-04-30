@@ -19,9 +19,15 @@ jobs:
           repository: ${{ matrix.repositories }}
           latest: true
           fileName: "*"
-          out-file-path: "repos/${matrix.repositories}"
+          out-file-path: repos/${{ matrix.repositories }}
           tarBall: false
           zipBall: true
+
+      - name: Save to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.repositories }}
+          path: repos/**/*.zip
 
   create_artifacts:
     needs: downloaded_repos
