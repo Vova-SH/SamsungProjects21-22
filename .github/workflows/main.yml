@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: copy release
-        uses: robinraju/release-downloader@v1.3
+      - uses: robinraju/release-downloader@v1.3
         with:
           repository: "Vova-SH/MakeUpYourMind"
           latest: true
@@ -27,6 +27,14 @@ jobs:
           out-file-path: "test"
           tarBall: false
           zipBall: true
+
+      - name: Save to archive
+        uses: actions/upload-artifact@v3
+        with:
+          name: result
+          path: |
+            test/**/*.zip
+            test/**/*.ppt
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
