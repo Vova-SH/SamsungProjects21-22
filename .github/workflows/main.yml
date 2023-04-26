@@ -25,18 +25,7 @@ jobs:
           JSON="${JSON//$'\r'/'%0D'}"
           echo "works=${JSON}" >> "$GITHUB_OUTPUT"
       - name: Checking data
-        run: echo "${{ steps.setup_repos.outputs.works }}"        
-      - name: Checking data
-        run: echo "${{ fromJson(steps.setup_repos.outputs.works) }}"
-
-  check-outputs:
-    needs: get-list-works
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check data from other job
-        run: echo "${{ needs.get-list-works.outputs.works }}"      
-      - name: Check data from other job
-        run: echo "${{ fromJson(needs.get-list-works.outputs.works) }}"
+        run: echo "${{ steps.setup_repos.outputs.works }}"
     
 
   load-latest-release:
@@ -118,7 +107,7 @@ jobs:
           path: ${{ github.event.inputs.destination_folder }}/Projects/**
 
       - name: Push new projects
-        uses: stefanzweifel/git-auto-commit-action@v4.16
+        uses: stefanzweifel/git-auto-commit-action@v4.16.0
         with:
           commit_user_name: git-bot
           commit_user_email: git-bot@noreply.github.com
