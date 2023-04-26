@@ -32,8 +32,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check data from other job
-        run: |
-          echo "${{ needs.get-list-works.outputs.works }}"
+        run: echo "${{ needs.get-list-works.outputs.works }}"      
+      - name: Check data from other job
+        run: echo "${{ fromJson(needs.get-list-works.outputs.works) }}"
     
 
   load-latest-release:
