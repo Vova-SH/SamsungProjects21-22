@@ -27,7 +27,14 @@ jobs:
       - name: Checking data
         run: echo "${{ steps.setup_repos.outputs.works }}"
 
-
+  check-outputs:
+    needs: get-list-works
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check data from other job
+        run: |
+          echo "${{ needs.get-list-works.outputs.works }}"
+    
 
   load-latest-release:
     needs: get-list-works
