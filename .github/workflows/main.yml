@@ -21,7 +21,7 @@ jobs:
         run: |
           JSON=$(cat ./${{ github.event.inputs.destination_folder }}/repos.json)
           JSON="${JSON//'%'/'%25'}"
-          JSON="${JSON//$'\n'/'%0A'}"
+          JSON="${JSON//$'\n'/''}"
           JSON="${JSON//$'\r'/'%0D'}"
           echo "works=${JSON}" >> "$GITHUB_OUTPUT"
       - name: Checking data
