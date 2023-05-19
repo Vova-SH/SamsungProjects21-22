@@ -5,11 +5,12 @@ on:
     inputs:
       destination_folder:
         description: 'Choose folder'
+        default: '21-22'
         required: true
       code_source:
         description: 'Select the source code location'
         required: true
-        default: 'release'
+        default: 'repository'
         type: choice
         options:
         - release
