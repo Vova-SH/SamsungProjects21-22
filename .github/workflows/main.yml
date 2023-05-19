@@ -142,7 +142,7 @@ jobs:
         continue-on-error: true
         run: |
          cd "repos/${{ matrix.data.folder }}"
-         zip -r source.zip /source/
+         zip -r ./source.zip ./source/
       - name: Save to artifacts sources
         uses: actions/upload-artifact@v3.1.2
         with:
