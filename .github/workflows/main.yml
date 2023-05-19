@@ -172,7 +172,7 @@ jobs:
           path: ${{ github.event.inputs.destination_folder }}/Projects/**
 
       - name: Push new projects
-        if: ${{ github.event.inputs.is_upload }}
+        if: ${{ github.event.inputs.is_upload == 'true' }}
         uses: stefanzweifel/git-auto-commit-action@v4.16.0
         with:
           commit_user_name: git-bot
