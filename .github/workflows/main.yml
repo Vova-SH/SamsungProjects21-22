@@ -121,7 +121,7 @@ jobs:
             repos/${{ matrix.data.folder }}/*.zip
 
   download-repository:
-    if: ${{ github.event.inputs.code_source }} == 'repository'
+    if: ${{ github.event.inputs.code_source == 'repository' }}
     needs: get-list-works
     strategy:
       matrix:
