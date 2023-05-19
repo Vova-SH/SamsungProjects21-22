@@ -17,7 +17,7 @@ on:
         - repository
       create_apk:
         description: 'Create APK (if not found in release)'
-        required: false
+        required: true
         type: boolean
       check_apk:
         description: 'Check APK (otherwise artifact will not be created)'
@@ -148,6 +148,20 @@ jobs:
         with:
           name: ${{ matrix.data.folder }}-source
           path: repos/${{ matrix.data.folder }}/*.zip
+
+  create-apk:
+    if: ${{ github.event.inputs.create_apk == 'true' }}
+    needs: [get-list-works, download-release, download-repository]
+    strategy:
+      matrix:
+        data: ${{ fromJson(needs.get-list-works.outputs.works) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get source code
+        uses: actions/download-artifact@v3.0.2
+        with:
+          path: ${{ github.event.inputs.destination_folder }}/Projects
+        
 
   publish:
     needs: [download-release, download-repository]
