@@ -78,7 +78,7 @@ jobs:
           files: "repos/${{ matrix.data.folder }}/*.apk"
 
       - name: Save to artifacts APK
-        if: ${{ steps.check_apk_on_release.outputs.files_exists }}
+        if: steps.check_apk_on_release.outputs.files_exists == 'true'
         uses: actions/upload-artifact@v3.1.2
         with:
           name: ${{ matrix.data.folder }}-APK
@@ -103,7 +103,10 @@ jobs:
           files: "repos/${{ matrix.data.folder }}/*.pdf"
 
       - name: Save to artifacts presentation
-        if: ${{ steps.check_ppt.outputs.files_exists || steps.check_pptx.outputs.files_exists || steps.check_pdf.outputs.files_exists }}
+        if: >
+         steps.check_ppt.outputs.files_exists == 'true' ||
+         steps.check_pptx.outputs.files_exists == 'true' ||
+         steps.check_pdf.outputs.files_exists == 'true'
         uses: actions/upload-artifact@v3.1.2
         with:
           name: ${{ matrix.data.folder }}-presentation
