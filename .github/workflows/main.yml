@@ -146,7 +146,7 @@ jobs:
           path: repos/${{ matrix.data.folder }}/*.zip
 
   publish:
-    needs: download-release
+    needs: [download-release, download-repository]
     runs-on: ubuntu-latest
     permissions:
       contents: write 
