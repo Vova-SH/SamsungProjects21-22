@@ -78,7 +78,7 @@ jobs:
           files: "repos/${{ matrix.data.folder }}/*.apk"
 
       - name: Save to artifacts APK
-        if: steps.check_apk_on_release.outputs.files_exists
+        if: ${{ steps.check_apk_on_release.outputs.files_exists }}
         uses: actions/upload-artifact@v3.1.2
         with:
           name: ${{ matrix.data.folder }}-APK
@@ -103,10 +103,7 @@ jobs:
           files: "repos/${{ matrix.data.folder }}/*.pdf"
 
       - name: Save to artifacts presentation
-        if: >
-         steps.check_ppt.outputs.files_exists == 'true' ||
-         steps.check_pptx.outputs.files_exists == 'true' ||
-         steps.check_pdf.outputs.files_exists == 'true'
+        if: ${{ steps.check_ppt.outputs.files_exists || steps.check_pptx.outputs.files_exists || steps.check_pdf.outputs.files_exists }}
         uses: actions/upload-artifact@v3.1.2
         with:
           name: ${{ matrix.data.folder }}-presentation
@@ -116,7 +113,7 @@ jobs:
             repos/${{ matrix.data.folder }}/*.pdf
 
       - name:  Save to artifacts sources
-        if: github.event.inputs.code_source == 'release'
+        if: ${{ github.event.inputs.code_source }} == 'release'
         uses: actions/upload-artifact@v3.1.2
         with:
           name: ${{ matrix.data.folder }}-source
@@ -124,7 +121,7 @@ jobs:
             repos/${{ matrix.data.folder }}/*.zip
 
   download-repository:
-    if: github.event.inputs.code_source == 'repository'
+    if: ${{ github.event.inputs.code_source }} == 'repository'
     needs: get-list-works
     strategy:
       matrix:
@@ -171,7 +168,7 @@ jobs:
           path: ${{ github.event.inputs.destination_folder }}/Projects/**
 
       - name: Push new projects
-        if: github.event.inputs.is_upload
+        if: ${{ github.event.inputs.is_upload }}
         uses: stefanzweifel/git-auto-commit-action@v4.16.0
         with:
           commit_user_name: git-bot
