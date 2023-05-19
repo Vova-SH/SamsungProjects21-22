@@ -140,7 +140,7 @@ jobs:
       - name: Compress sources
         continue-on-error: true
         run: |
-         cd repos/${{ matrix.data.folder }}/source/
+         cd "repos/${{ matrix.data.folder }}/source/"
          zip -r "repos/${{ matrix.data.folder }}/source.zip"
       - name: Save to artifacts sources
         uses: actions/upload-artifact@v3.1.2
