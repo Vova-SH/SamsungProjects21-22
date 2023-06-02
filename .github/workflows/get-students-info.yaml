@@ -34,8 +34,8 @@ jobs:
       - name: Read base information from ${{ inputs.destination_folder }}/info.yaml
         id: setup_repos
         run: |
-          YAML=$(cat ./${{ inputs.destination_folder }}/info.yaml)
-          echo "works=${YAML}" >> "$GITHUB_OUTPUT"
+          JSON=$(yq r -j ./${{ inputs.destination_folder }}/info.yaml)
+          echo "works=${JSON}" >> "$GITHUB_OUTPUT"
       - name: Checking data
         run: echo "${{ steps.setup_repos.outputs.works }}"
       - name: Checking data 2
