@@ -1,0 +1,42 @@
+name: Get students info from yaml
+
+on:
+  workflow_dispatch:
+    inputs:
+      destination_folder:
+        description: 'Choose folder'
+        default: '21-22'
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      destination_folder:
+        description: 'Choose folder'
+        default: '21-22'
+        required: true
+        type: string
+    outputs:
+      students-project:
+        description: "All students, which have in YAML file"
+        value: ${{ jobs.parse-source-file.outputs.students-project }}
+
+    
+
+jobs:
+  parse-source-file:
+    runs-on: ubuntu-latest
+    outputs:
+      students-project: ${{ steps.setup_repos.outputs.works }}
+    steps:
+      - name: Checkout last changes
+        uses: actions/checkout@v3.5.2
+
+      - name: Read base information from ${{ inputs.destination_folder }}/info.yaml
+        id: setup_repos
+        run: |
+          YAML=$(cat ./${{ inputs.destination_folder }}/info.yaml)
+          echo "works=${YAML}" >> "$GITHUB_OUTPUT"
+      - name: Checking data
+        run: echo "${{ steps.setup_repos.outputs.works }}"
+      - name: Checking data 2
+        run: echo "${{ steps.setup_repos.outputs.works[0] }}"
