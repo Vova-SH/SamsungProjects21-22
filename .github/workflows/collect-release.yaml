@@ -28,7 +28,7 @@ on:
 
 jobs:
   get-students-info:
-    uses: ./.github/workflows/get-students-info.yaml@main
+    uses: Vova-SH/SamsungProjects21-22/.github/workflows/get-students-info.yaml@main
     with:
       destination_folder: ${{ inputs.destination_folder }}
 
@@ -37,7 +37,7 @@ jobs:
     strategy:
       matrix:
         data: ${{ fromJson(needs.get-students-info.outputs.students-project) }}
-    uses: ./.github/workflows/get-last-release.yaml@main
+    uses: Vova-SH/SamsungProjects21-22/.github/workflows/get-last-release.yaml@main
     with:
       student: ${{ matrix.data.folder }}
       repo: ${{ matrix.data.repo }}
