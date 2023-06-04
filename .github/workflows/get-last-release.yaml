@@ -107,7 +107,7 @@ jobs:
             repos/${{ inputs.student }}/*.zip
     
       - name: Save info to output
-        uses: cloudposse/github-action-matrix-outputs-write@main
+        uses: cloudposse/github-action-matrix-outputs-write@0.4.2
         id: out
         with:
           matrix-step-name: ${{ github.job }}

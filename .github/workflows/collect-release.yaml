@@ -1,0 +1,42 @@
+name: Collect all releases
+
+on:
+  workflow_dispatch:
+    inputs:
+      destination_folder:
+        description: 'Choose folder'
+        default: '21-22'
+        required: true
+        type: string
+      skip_apk:
+        description: 'Do not add apk to artifact'
+        default: false
+        type: boolean
+      skip_presentation:
+        description: 'Do not add presentation to artifact'
+        default: false
+        type: boolean
+      skip_sources:
+        description: 'Do not add sources to artifact'
+        default: false
+        type: boolean
+
+    
+
+jobs:
+  get-students-info:
+    uses: .github/workflows/get-students-info.yaml@main
+    with:
+      destination_folder: ${{ inputs.destination_folder }}
+  create-artifacts:
+    needs: get-students-info
+    strategy:
+      matrix:
+        data: ${{ fromJson(needs.get-students-info.outputs.students-project) }}
+    uses: .github/workflows/get-last-release.yaml@main
+    with:
+      student: ${{ matrix.data.folder }}
+      repo: ${{ matrix.data.repo }}
+      skip_apk: ${{ inputs.skip_apk }}
+      skip_presentation: ${{ inputs.skip_presentation }}
+      skip_sources: ${{ inputs.skip_sources }}

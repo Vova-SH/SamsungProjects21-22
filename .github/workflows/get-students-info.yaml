@@ -1,13 +1,6 @@
 name: Get students info from yaml
 
 on:
-  workflow_dispatch:
-    inputs:
-      destination_folder:
-        description: 'Choose folder'
-        default: '21-22'
-        required: true
-        type: string
   workflow_call:
     inputs:
       destination_folder:
