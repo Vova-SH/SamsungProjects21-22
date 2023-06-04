@@ -10,14 +10,17 @@ on:
         type: string
       skip_apk:
         description: 'Do not add apk to artifact'
+        required: true
         default: false
         type: boolean
       skip_presentation:
         description: 'Do not add presentation to artifact'
+        required: true
         default: false
         type: boolean
       skip_sources:
         description: 'Do not add sources to artifact'
+        required: true
         default: false
         type: boolean
 
