@@ -1,0 +1,117 @@
+name: Get students info from yaml
+
+on:
+  workflow_call:
+    inputs:
+      student:
+        description: 'Student name'
+        required: true
+        type: string
+      repo:
+        description: 'Github repository on relative format'
+        required: true
+        type: string
+      skip_apk:
+        description: 'Do not add apk to artifact'
+        required: true
+        type: boolean
+      skip_presentation:
+        description: 'Do not add presentation to artifact'
+        required: true
+        type: boolean
+      skip_sources:
+        description: 'Do not add sources to artifact'
+        required: true
+        type: boolean
+    outputs:
+      release-info:
+        description: "Information about the name of the artifact and what the latest release has"
+        value: ${{ jobs.get-lastest-release.outputs.release-info }}
+
+    
+
+jobs:
+  get-lastest-release:
+    runs-on: ubuntu-latest
+    outputs:
+      release-info: ${{ steps.out.outputs.result }}
+    steps:
+      - name: Load latest release from ${{ inputs.repo }}
+        continue-on-error: true
+        uses: robinraju/release-downloader@v1.7
+        with:
+          repository: ${{ inputs.repo }}
+          latest: true
+          fileName: "*"
+          out-file-path: repos/${{ inputs.student }}
+          tarBall: false
+          zipBall: ${{ inputs.skip_sources == 'false' }}
+
+      - name: Check APK
+        id: check_apk_on_release
+        uses: andstor/file-existence-action@v2
+        with:
+          files: "repos/${{ inputs.student }}/*.apk"
+
+      - name: Check PPT
+        id: check_ppt
+        uses: andstor/file-existence-action@v2
+        with:
+          files: "repos/${{ inputs.student }}/*.ppt"
+
+      - name: Check PPTX
+        id: check_pptx
+        uses: andstor/file-existence-action@v2
+        with:
+          files: "repos/${{ inputs.student }}/*.pptx"
+
+      - name: Check PDF
+        id: check_pdf
+        uses: andstor/file-existence-action@v2
+        with:
+          files: "repos/${{ inputs.student }}/*.pdf"
+
+      - name: Remove APK
+        if: >
+          steps.check_apk_on_release.outputs.files_exists == 'true' &&
+          inputs.skip_apk == 'true'
+        run: rm -rf repos/${{ inputs.student }}/*.apk
+
+      - name: Remove PPTX
+        if: >
+          steps.check_pptx.outputs.files_exists == 'true' &&
+          inputs.skip_presentation == 'true'
+        run: rm -rf repos/${{ inputs.student }}/*.pptx
+
+      - name: Remove PPT
+        if: >
+          steps.check_ppt.outputs.files_exists == 'true' &&
+          inputs.skip_presentation == 'true'
+        run: rm -rf repos/${{ inputs.student }}/*.ppt
+
+      - name: Remove PDF
+        if: >
+          steps.check_pdf.outputs.files_exists == 'true' &&
+          inputs.skip_presentation == 'true'
+        run: rm -rf repos/${{ inputs.student }}/*.pdf
+
+      - name: Save to artifacts presentation
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: ${{ inputs.student }}
+          path: |
+            repos/${{ inputs.student }}/*.ppt
+            repos/${{ inputs.student }}/*.pptx
+            repos/${{ inputs.student }}/*.pdf
+            repos/${{ inputs.student }}/*.apk
+            repos/${{ inputs.student }}/*.zip
+    
+      - name: Save info to output
+        uses: cloudposse/github-action-matrix-outputs-write@main
+        id: out
+        with:
+          matrix-step-name: ${{ github.job }}
+          matrix-key: ${{ inputs.student }}
+          outputs: |-
+            apk_exist: ${{ steps.check_apk_on_release.outputs.files_exists == 'true' }}
+            presentation_exist: ${{ steps.check_ppt.outputs.files_exists == 'true' || steps.check_pptx.outputs.files_exists == 'true' || steps.check_pdf.outputs.files_exists == 'true' }}
