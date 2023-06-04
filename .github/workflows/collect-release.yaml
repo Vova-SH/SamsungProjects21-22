@@ -28,15 +28,16 @@ on:
 
 jobs:
   get-students-info:
-    uses: .github/workflows/get-students-info.yaml@main
+    uses: ./.github/workflows/get-students-info.yaml@main
     with:
       destination_folder: ${{ inputs.destination_folder }}
+
   create-artifacts:
     needs: get-students-info
     strategy:
       matrix:
         data: ${{ fromJson(needs.get-students-info.outputs.students-project) }}
-    uses: .github/workflows/get-last-release.yaml@main
+    uses: ./.github/workflows/get-last-release.yaml@main
     with:
       student: ${{ matrix.data.folder }}
       repo: ${{ matrix.data.repo }}
