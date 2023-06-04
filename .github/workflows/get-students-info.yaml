@@ -41,5 +41,3 @@ jobs:
           echo "works=${JSON}" >> "$GITHUB_OUTPUT"
       - name: Checking data
         run: echo "${{ steps.setup_repos.outputs.works }}"
-      - name: Checking data 2
-        run: echo "${{ steps.setup_repos.outputs.works[0] }}"
