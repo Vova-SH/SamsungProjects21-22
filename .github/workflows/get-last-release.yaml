@@ -22,7 +22,10 @@ on:
       skip_sources:
         description: 'Do not add sources to artifact'
         required: true
-        type: boolean
+        type: boolean      
+      matrix-result-name:
+        required: true
+        type: string
     outputs:
       release-info:
         description: "Information about the name of the artifact and what the latest release has"
@@ -105,12 +108,12 @@ jobs:
             repos/${{ inputs.student }}/*.pdf
             repos/${{ inputs.student }}/*.apk
             repos/${{ inputs.student }}/*.zip
-    
+
       - name: Save info to output
         uses: cloudposse/github-action-matrix-outputs-write@0.4.2
         id: out
         with:
-          matrix-step-name: ${{ github.job }}
+          matrix-step-name: ${{ inputs.matrix-result-name }}
           matrix-key: ${{ inputs.student }}
           outputs: |-
             apk_exist: ${{ steps.check_apk_on_release.outputs.files_exists == 'true' }}

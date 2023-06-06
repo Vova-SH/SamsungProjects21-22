@@ -41,6 +41,7 @@ jobs:
     with:
       student: ${{ matrix.data.folder }}
       repo: ${{ matrix.data.repo }}
+      matrix-result-name: ${{ github.job }}
       skip_apk: ${{ inputs.skip_apk }}
       skip_presentation: ${{ inputs.skip_presentation }}
       skip_sources: ${{ inputs.skip_sources }}
