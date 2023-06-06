@@ -48,6 +48,7 @@ jobs:
       skip_sources: ${{ inputs.skip_sources }}
 
   release-result:
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     needs: [create-artifacts]
     outputs:
