@@ -1,4 +1,4 @@
-name: Get students info from yaml
+name: Download latest release and checking files
 
 on:
   workflow_call:
