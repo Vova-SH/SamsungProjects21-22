@@ -40,7 +40,6 @@ jobs:
       release-info: ${{ steps.out.outputs.result }}
     steps:
       - name: Load latest release from ${{ inputs.repo }}
-        continue-on-error: true
         uses: robinraju/release-downloader@v1.7
         with:
           repository: ${{ inputs.repo }}

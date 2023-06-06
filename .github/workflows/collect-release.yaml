@@ -35,6 +35,7 @@ jobs:
   create-artifacts:
     needs: get-students-info
     strategy:
+      fail-fast: false
       matrix:
         data: ${{ fromJson(needs.get-students-info.outputs.students-project) }}
     uses: Vova-SH/SamsungProjects21-22/.github/workflows/get-last-release.yaml@main
