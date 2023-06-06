@@ -61,3 +61,15 @@ jobs:
           matrix-step-name: release-report
       - name: Show report
         run: echo "${{ steps.report.outputs.result }}"
+
+  build-apk:
+    needs: [release-result]
+    if: ${{ inputs.skip_apk == 'false' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        data: ${{ fromJson(needs.release-result.outputs.result) }}
+    uses: Vova-SH/SamsungProjects21-22/.github/workflows/build-apk.yaml@main
+    with:
+      artifact-name: ${{ matrix.data.key }}
+      archive-name: ${{ matrix.data.value }}

@@ -1,0 +1,24 @@
+name: Build APK
+
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        description: 'Artifact, when exist source code'
+        required: true
+        type: string
+      archive-name:
+        description: 'Zip filename in artifact'
+        required: true
+        type: string
+
+    
+
+jobs:
+  get-lastest-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Artifact name
+        run: echo ${{ inputs.artifact-name }}
+      - name: Archive name
+        run: echo ${{ inputs.archive-name }}
