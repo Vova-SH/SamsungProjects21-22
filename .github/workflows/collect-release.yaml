@@ -64,7 +64,6 @@ jobs:
 
   build-apk:
     needs: [release-result]
-    if: ${{ inputs.skip_apk == 'false' }}
     strategy:
       fail-fast: false
       matrix:
