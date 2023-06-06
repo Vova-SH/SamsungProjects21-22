@@ -41,7 +41,7 @@ jobs:
     with:
       student: ${{ matrix.data.folder }}
       repo: ${{ matrix.data.repo }}
-      matrix-result-name: ${{ github.job }}
+      matrix-result-name: release-report
       skip_apk: ${{ inputs.skip_apk }}
       skip_presentation: ${{ inputs.skip_presentation }}
       skip_sources: ${{ inputs.skip_sources }}
@@ -56,6 +56,6 @@ jobs:
         uses: cloudposse/github-action-matrix-outputs-read@0.1.1
         id: report
         with:
-          matrix-step-name: create-artifacts
+          matrix-step-name: release-report
       - name: Show report
         run: echo "${{ steps.report.outputs.result }}"
