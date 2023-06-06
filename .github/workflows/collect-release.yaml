@@ -24,7 +24,7 @@ on:
         default: false
         type: boolean
 
-    
+
 
 jobs:
   get-students-info:
@@ -44,3 +44,17 @@ jobs:
       skip_apk: ${{ inputs.skip_apk }}
       skip_presentation: ${{ inputs.skip_presentation }}
       skip_sources: ${{ inputs.skip_sources }}
+
+  release-result:
+    runs-on: ubuntu-latest
+    needs: [create-artifacts]
+    outputs:
+      result: "${{ steps.report.outputs.result }}"
+    steps:
+      - name: Get report
+        uses: cloudposse/github-action-matrix-outputs-read@0.1.1
+        id: report
+        with:
+          matrix-step-name: create-artifacts
+      - name: Show report
+        run: echo "${{ steps.report.outputs.result }}"
